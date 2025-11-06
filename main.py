@@ -3,6 +3,7 @@ import cv2
 import time
 import numpy as np
 import math
+import pyautogui
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -11,7 +12,8 @@ BaseOptions = mp.tasks.BaseOptions
 GestureRecognizer =  mp.tasks.vision.GestureRecognizer
 GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
-
+last_scroll_time = 0
+SCROLL_COOLDOWN = 0.5
 
 cap = cv2.VideoCapture(0)
 with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.5) as hands:
@@ -77,7 +79,7 @@ with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.
 
                 for num,hand in enumerate(hand_landmarks.landmark):
                     cx,cy = int(hand.x * w), int(hand.y * h)
-                    print(f"landmark{num}: {cx},{cy}")
+                    # print(f"landmark{num}: {cx},{cy}")
                     if cx > x_max:
                         x_max = cx
                     if cx < x_min:
@@ -87,6 +89,18 @@ with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.
                     if cy < y_min:
                         y_min = cy
                 padding = 20
+                current_time = time.time() 
+
+   
+                if (current_time - last_scroll_time) > SCROLL_COOLDOWN:
+                    if pointing_up:
+                        pyautogui.scroll(100) 
+                        last_scroll_time = current_time
+                    elif pointing_down:
+                        pyautogui.scroll(-100) # Scroll DOWN
+                        last_scroll_time = current_time
+
+                    
                 cv2.rectangle(image, 
                             (x_min - padding, y_min - padding), 
                             (x_max + padding, y_max + padding), 
