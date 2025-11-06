@@ -55,10 +55,10 @@ with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.
                 angle_index_pip = get_angle(hand_landmarks.landmark[5],hand_landmarks.landmark[6],hand_landmarks.landmark[7])
                 
                 
-                is_index_straight = angle_index_pip > 160
-                is_middle_bent = get_angle(hand_landmarks.landmark[9],hand_landmarks.landmark[10],hand_landmarks.landmark[12]) < 100
-                is_ring_bent = get_angle(hand_landmarks.landmark[13],hand_landmarks.landmark[14],hand_landmarks.landmark[16]) < 100
-                is_pinky_bent = get_angle(hand_landmarks.landmark[17],hand_landmarks.landmark[18],hand_landmarks.landmark[20]) < 100  
+                is_index_straight = angle_index_pip > 140
+                is_middle_bent = get_angle(hand_landmarks.landmark[9],hand_landmarks.landmark[10],hand_landmarks.landmark[12]) < 110
+                is_ring_bent = get_angle(hand_landmarks.landmark[13],hand_landmarks.landmark[14],hand_landmarks.landmark[16]) < 110
+                is_pinky_bent = get_angle(hand_landmarks.landmark[17],hand_landmarks.landmark[18],hand_landmarks.landmark[20]) < 110  
                 
                 is_pointing_up_direction = hand_landmarks.landmark[8].y < hand_landmarks.landmark[5].y
                 is_pointing_down_direction = hand_landmarks.landmark[8].y > hand_landmarks.landmark[5].y
@@ -67,16 +67,14 @@ with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.
                     if is_pointing_up_direction:
                         pointing_up = True
                         gesture_text = "Pointing UP"
+                       
                     elif is_pointing_down_direction:
                         pointing_down = True
                         gesture_text = "Pointing DOWN"
-                    else:
-                        gesture_text = "none"
+                        
+                else:
+                    gesture_text = "none"
 
-
-
-                 
-            
                 for num,hand in enumerate(hand_landmarks.landmark):
                     cx,cy = int(hand.x * w), int(hand.y * h)
                     print(f"landmark{num}: {cx},{cy}")
@@ -101,6 +99,7 @@ with mp_hands.Hands(min_detection_confidence = 0.5, min_tracking_confidence = 0.
                     2) # Thickness
                 mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS, mp_drawing_styles.get_default_hand_landmarks_style(),
                 mp_drawing_styles.get_default_hand_connections_style())
+                
                  
 
 
